@@ -334,6 +334,12 @@ void dlio::OdomNode::publishPose(const ros::TimerEvent& e) {
   this->odom_ros.pose.pose.orientation.y = this->state.q.y();
   this->odom_ros.pose.pose.orientation.z = this->state.q.z();
 
+  // Copia i valori nell'array di covarianza del messaggio
+  for (int i = 0; i < 36; ++i) {
+    this->odom_ros.pose.covariance[i] = static_covariance[i];
+    this->odom_ros.twist.covariance[i] = static_covariance[i];
+  }
+
   this->odom_ros.twist.twist.linear.x = this->state.v.lin.w[0];
   this->odom_ros.twist.twist.linear.y = this->state.v.lin.w[1];
   this->odom_ros.twist.twist.linear.z = this->state.v.lin.w[2];
@@ -341,6 +347,8 @@ void dlio::OdomNode::publishPose(const ros::TimerEvent& e) {
   this->odom_ros.twist.twist.angular.x = this->state.v.ang.b[0];
   this->odom_ros.twist.twist.angular.y = this->state.v.ang.b[1];
   this->odom_ros.twist.twist.angular.z = this->state.v.ang.b[2];
+
+
 
   this->odom_pub.publish(this->odom_ros);
 

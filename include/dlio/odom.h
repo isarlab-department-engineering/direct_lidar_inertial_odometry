@@ -335,4 +335,17 @@ private:
   double geo_abias_max_;
   double geo_gbias_max_;
 
+// Fix covariance position/twist
+  double static_covariance[36] = {
+    1e-3, 0, 0, 0, 0, 0,
+    0, 1e-3, 0, 0, 0, 0,
+    0, 0, 1e-3, 0, 0, 0,
+    0, 0, 0, 1e-3, 0, 0,
+    0, 0, 0, 0, 1e-3, 0,
+    0, 0, 0, 0, 0, 1e-3
+  };
+
+    // Membri per la gestione di TF
+    std::shared_ptr<tf2_ros::Buffer> tf_buffer;
+    std::shared_ptr<tf2_ros::TransformListener> tf_listener;
 };
