@@ -344,7 +344,7 @@ void dlio::OdomNode::publishPose(const ros::TimerEvent& e) {
   // Copia i valori nell'array di covarianza del messaggio
   for (int i = 0; i < 36; ++i) {
     this->odom_ros.pose.covariance[i] = static_covariance[i];
-    this->odom_ros.twist.covariance[i] = static_covariance[i];
+    this->odom_ros.twist.covariance[i] = static_covariance_twist[i];
   }
 
   this->odom_ros.twist.twist.linear.x = this->state.v.lin.w[0];
@@ -417,38 +417,38 @@ void dlio::OdomNode::publishToROS(pcl::PointCloud<PointType>::ConstPtr published
   br.sendTransform(transformStamped);
 
 // transform: baselink to imu
-  transformStamped.header.stamp = this->imu_stamp;
-  transformStamped.header.frame_id = this->baselink_frame;
-  transformStamped.child_frame_id = this->imu_frame;
-
-  transformStamped.transform.translation.x = this->extrinsics.baselink2imu.t[0];
-  transformStamped.transform.translation.y = this->extrinsics.baselink2imu.t[1];
-  transformStamped.transform.translation.z = this->extrinsics.baselink2imu.t[2];
-
-  Eigen::Quaternionf q(this->extrinsics.baselink2imu.R);
-  transformStamped.transform.rotation.w = q.w();
-  transformStamped.transform.rotation.x = q.x();
-  transformStamped.transform.rotation.y = q.y();
-  transformStamped.transform.rotation.z = q.z();
-
-  br.sendTransform(transformStamped);
-
-  // transform: baselink to lidar
-  transformStamped.header.stamp = this->imu_stamp;
-  transformStamped.header.frame_id = this->baselink_frame;
-  transformStamped.child_frame_id = this->lidar_frame;
-
-  transformStamped.transform.translation.x = this->extrinsics.baselink2lidar.t[0];
-  transformStamped.transform.translation.y = this->extrinsics.baselink2lidar.t[1];
-  transformStamped.transform.translation.z = this->extrinsics.baselink2lidar.t[2];
-
-  Eigen::Quaternionf qq(this->extrinsics.baselink2lidar.R);
-  transformStamped.transform.rotation.w = qq.w();
-  transformStamped.transform.rotation.x = qq.x();
-  transformStamped.transform.rotation.y = qq.y();
-  transformStamped.transform.rotation.z = qq.z();
-
-  br.sendTransform(transformStamped);
+//  transformStamped.header.stamp = this->imu_stamp;
+//  transformStamped.header.frame_id = this->baselink_frame;
+//  transformStamped.child_frame_id = this->imu_frame;
+//
+//  transformStamped.transform.translation.x = this->extrinsics.baselink2imu.t[0];
+//  transformStamped.transform.translation.y = this->extrinsics.baselink2imu.t[1];
+//  transformStamped.transform.translation.z = this->extrinsics.baselink2imu.t[2];
+//
+//  Eigen::Quaternionf q(this->extrinsics.baselink2imu.R);
+//  transformStamped.transform.rotation.w = q.w();
+//  transformStamped.transform.rotation.x = q.x();
+//  transformStamped.transform.rotation.y = q.y();
+//  transformStamped.transform.rotation.z = q.z();
+//
+//  br.sendTransform(transformStamped);
+//
+//  // transform: baselink to lidar
+//  transformStamped.header.stamp = this->imu_stamp;
+//  transformStamped.header.frame_id = this->baselink_frame;
+//  transformStamped.child_frame_id = this->lidar_frame;
+//
+//  transformStamped.transform.translation.x = this->extrinsics.baselink2lidar.t[0];
+//  transformStamped.transform.translation.y = this->extrinsics.baselink2lidar.t[1];
+//  transformStamped.transform.translation.z = this->extrinsics.baselink2lidar.t[2];
+//
+//  Eigen::Quaternionf qq(this->extrinsics.baselink2lidar.R);
+//  transformStamped.transform.rotation.w = qq.w();
+//  transformStamped.transform.rotation.x = qq.x();
+//  transformStamped.transform.rotation.y = qq.y();
+//  transformStamped.transform.rotation.z = qq.z();
+//
+//  br.sendTransform(transformStamped);
 
 }
 

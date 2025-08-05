@@ -345,6 +345,15 @@ private:
     0, 0, 0, 0, 0, 1e-3
   };
 
+  double static_covariance_twist[36] = {
+    1e-1, 0, 0, 0, 0, 0,
+    0, 1e-1, 0, 0, 0, 0,
+    0, 0, 1e-1, 0, 0, 0,
+    0, 0, 0, 1e-3, 0, 0,
+    0, 0, 0, 0, 1e-3, 0,
+    0, 0, 0, 0, 0, 1e-3
+  };
+
     // Membri per la gestione di TF
     std::shared_ptr<tf2_ros::Buffer> tf_buffer;
     std::shared_ptr<tf2_ros::TransformListener> tf_listener;
