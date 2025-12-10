@@ -1,3 +1,52 @@
+# DLIO for Warthog Robot
+
+This is a fork of [VECTR-UCLA/direct_lidar_inertial_odometry](https://github.com/vectr-ucla/direct_lidar_inertial_odometry) adapted for the Clearpath Warthog robot.
+
+## Warthog-Specific Modifications
+
+This fork includes the following customizations for Warthog integration:
+
+### Configuration Changes
+- **Updated TF extrinsics** in `cfg/dlio.yaml` to match Warthog's sensor layout:
+  - `baselink → imu`: Translation `[0.0, 0.0, -0.030]` with 90° rotation
+  - `baselink → lidar`: Translation `[0.325, 0.0, 0.443]`
+- **Removed redundant TF publishers** for baselink→IMU and baselink→LiDAR transforms (handled by existing Warthog TF tree)
+- **Added covariance matrices** for odometry pose and twist messages for EKF fusion
+- **Integration with single EKF** for sensor fusion with robot's odometry
+
+### Launch File for Warthog
+
+Use the dedicated launch file for Warthog:
+
+```sh
+roslaunch direct_lidar_inertial_odometry dlio_warthog.launch
+```
+
+#### What it launches:
+- **DLIO Odometry Node** (`dlio_odom_node`): Computes LiDAR-inertial odometry
+  - Subscribes to: `/sensors/lidar_0/pointcloud`, `/sensors/imu_0/data_rotated`
+  - Publishes to: `/robot/dlio/odom_node/{odom,pose,path,keyframes,pointcloud/keyframe,pointcloud/deskewed}`
+- **DLIO Mapping Node** (`dlio_map_node`): Builds global map from keyframes
+  - Subscribes to: `/robot/dlio/odom_node/pointcloud/keyframe`
+  - Publishes to: `/robot/dlio/map_node/map`
+- **Static TF publisher**: `robot/base_link` → `base_link`
+- **IMU rotation node** (from `sensor_fusion` package): Rotates IMU data to match frame conventions
+
+#### Prerequisites:
+The launch file requires the following ROS packages to be available:
+- `sensor_fusion` package with `imu_rotation.launch`
+- Warthog sensor drivers publishing to:
+  - `/sensors/lidar_0/pointcloud` (sensor_msgs/PointCloud2)
+  - `/sensors/imu_0/data` (sensor_msgs/Imu) - will be rotated by `imu_rotation` node
+
+---
+
+# Original DLIO README
+
+The following is the README from the original repository:
+
+---
+
 # Direct LiDAR-Inertial Odometry: Lightweight LIO with Continuous-Time Motion Correction
 
 #### [[ IEEE ICRA ](https://ieeexplore.ieee.org/document/10160508)] [[ arXiv ](https://arxiv.org/abs/2203.03749)] [[ Video ](https://www.youtube.com/watch?v=4-oXjG8ow10)] [[ Presentation ](https://www.youtube.com/watch?v=Hmiw66KZ1tU)]
